@@ -119,7 +119,7 @@ public class MtsTest {
     }
 
     @Test
-        // Задание 4 Проверить работу ссылки Подробнее о сервисе
+        // Задание 4 Проверить заполнение формы и работу кнопки
     void PresenceOfButton() {
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--incognito");

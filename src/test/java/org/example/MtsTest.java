@@ -67,10 +67,10 @@ public class MtsTest {
                 System.out.println("Логотипы платежных систем найдены");
 
                 for (WebElement image : images) {
-                    String imgSrc = image.getAttribute("src");
+                    String imgSrc = image.getAttribute("alt");
 
                     if (imgSrc != null && !imgSrc.isEmpty()) {
-                        System.out.println("Логотип с URL: " + imgSrc);
+                        System.out.println("Логотип: " + imgSrc);
                     } else {
                         System.out.println("Логотип не найден");
                     }

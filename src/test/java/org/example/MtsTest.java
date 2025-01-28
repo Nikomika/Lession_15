@@ -3,24 +3,17 @@ package org.example;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeDriverService;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.time.Duration;
-import java.util.List;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class MtsTest {
 
     @BeforeAll
     static void preparationOfTest() {
-        System.setProperty("chrome-win64.zip", "C:/Users/Nikomi/IdeaProjects/Lesson_15/src/main/resources/");
-
+        System.setProperty("chromedriver-win64.zip", "C:/Users/Nikomi/IdeaProjects/Lesson_15/src/main/resources/");
     }
 
     @Test
@@ -29,19 +22,10 @@ public class MtsTest {
         options.addArguments("--incognito");
         WebDriver driver = new ChromeDriver(options);
         try {
-            driver.get("https://www.mts.by//");
-            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
-            WebElement rejectButton = driver.findElement(By.xpath("//button[@class='btn btn_gray cookie__cancel']"));
-            wait.until(ExpectedConditions.elementToBeClickable(rejectButton));
-            rejectButton.click();
-
-            WebElement block = driver.findElement(By.xpath("//div[@class='pay__wrapper']/h2"));
-            String blockText = block.getText();
-            if (("Онлайн пополнение" + "\n" + "без комиссии").equals(blockText)) {
-                System.out.println("Название блока соответствует ожидаемому.");
-            } else {
-                System.out.println("Название блока не соответствует ожидаемому. Найдено: " + blockText);
-            }
+            LoginPage mtsPage = new LoginPage(driver);
+            mtsPage.openPage("https://www.mts.by/");
+            mtsPage.clickRejectButton("//button[@class='btn btn_gray cookie__cancel']");
+            mtsPage.checkingProposal("Онлайн пополнение" + "\n" + "без комиссии", "//div[@class='pay__wrapper']/h2");
         } finally {
             driver.quit();
         }
@@ -54,36 +38,10 @@ public class MtsTest {
         options.addArguments("--incognito");
         WebDriver driver = new ChromeDriver(options);
         try {
-            driver.get("https://www.mts.by//");
-            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
-            WebElement rejectButton = driver.findElement(By.xpath("//button[@class='btn btn_gray cookie__cancel']"));
-            wait.until(ExpectedConditions.elementToBeClickable(rejectButton));
-            rejectButton.click();
-
-            WebElement container = driver.findElement(By.className("pay__partners"));
-            List<WebElement> images = container.findElements(By.tagName("img"));
-
-            if (images.size() > 0) {
-                System.out.println("Логотипы платежных систем найдены");
-
-                for (WebElement image : images) {
-                    String imgSrc = image.getAttribute("alt");
-
-                    if (imgSrc != null && !imgSrc.isEmpty()) {
-                        System.out.println("Логотип: " + imgSrc);
-                    } else {
-                        System.out.println("Логотип не найден");
-                    }
-
-                    if (image.isDisplayed()) {
-                        System.out.println("Логотип отображается на странице.");
-                    } else {
-                        System.out.println("Логотип не отображается.");
-                    }
-                }
-            } else {
-                System.out.println("Логотипы платежных систем не найдены");
-            }
+            LoginPage mtsPage = new LoginPage(driver);
+            mtsPage.openPage("https://www.mts.by/");
+            mtsPage.clickRejectButton("//button[@class='btn btn_gray cookie__cancel']");
+            mtsPage.checkingListLogo();
         } finally {
             driver.quit();
         }
@@ -97,22 +55,10 @@ public class MtsTest {
         WebDriver driver = new ChromeDriver(options);
 
         try {
-            driver.get("https://www.mts.by//");
-            WebElement rejectButton = driver.findElement(By.xpath("//button[@class='btn btn_gray cookie__cancel']"));
-            WebDriverWait wait2 = new WebDriverWait(driver, Duration.ofSeconds(3));
-            wait2.until(ExpectedConditions.elementToBeClickable(rejectButton));
-            rejectButton.click();
-            WebElement link = driver.findElement(By.xpath("//a[@href='/help/poryadok-oplaty-i-bezopasnost-internet-platezhey/']"));
-
-            link.click();
-
-            WebElement element = wait2.until(ExpectedConditions.presenceOfElementLocated(By.xpath(
-                    "//div[@class='container-fluid']")));
-            if (element != null) {
-                System.out.println("Целевая страница загружена корректно.");
-            } else {
-                System.out.println("Целевая страница не загружена.");
-            }
+            LoginPage mtsPage = new LoginPage(driver);
+            mtsPage.openPage("https://www.mts.by/");
+            mtsPage.clickRejectButton("//button[@class='btn btn_gray cookie__cancel']");
+            mtsPage.clickLinkPage("https://www.mts.by/help/poryadok-oplaty-i-bezopasnost-internet-platezhey/");
         } finally {
             driver.quit();
         }
@@ -125,27 +71,154 @@ public class MtsTest {
         options.addArguments("--incognito");
         WebDriver driver = new ChromeDriver(options);
         try {
-            driver.get("https://www.mts.by//");
-            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(3));
-            WebElement rejectButton = driver.findElement(
-                    By.xpath("//button[@class='btn btn_gray cookie__cancel']"));
-            wait.until(ExpectedConditions.elementToBeClickable(rejectButton));
-            rejectButton.click();
+            LoginPage mtsPage = new LoginPage(driver);
+            mtsPage.openPage("https://www.mts.by/");
+            mtsPage.clickRejectButton("//button[@class='btn btn_gray cookie__cancel']");
+            mtsPage.fillingInFieldAndWrite("connection-phone", "297777777");
+            mtsPage.fillingInFieldAndWrite("connection-sum", "6");
+            mtsPage.fillingInFieldAndWrite("connection-email", "77jthjs@gmiil.com");
+            mtsPage.clickRejectButton("//button[@class='button button__default ']");
 
-            WebElement phoneField = wait.until(ExpectedConditions.visibilityOfElementLocated(
-                    By.id("connection-phone")));
-            phoneField.sendKeys("297777777");
-            WebElement sumField = driver.findElement(By.id("connection-sum"));
-            sumField.sendKeys("4");
-            WebElement emailField = driver.findElement(By.id("connection-email"));
+        } finally {
+            driver.quit();
+        }
 
-            emailField.sendKeys("47jtvfs@gmiil.com");
+    }
 
-            WebElement submitButton = driver.findElement(
-                    By.xpath("//button[@class='button button__default ']"));
-            JavascriptExecutor js = (JavascriptExecutor) driver;
-            js.executeScript("arguments[0].click();", submitButton);
+    @Test
+        // Лабораторная 16 Задание 1.1 Проверить плесходеры Услуги Связи
+    void PresenceOfText() {
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--incognito");
+        WebDriver driver = new ChromeDriver(options);
+        try {
+            LoginPage mtsPage = new LoginPage(driver);
+            mtsPage.openPage("https://www.mts.by/");
+            mtsPage.clickRejectButton("//button[@class='btn btn_gray cookie__cancel']");
+            assertEquals("Номер телефона",
+                    mtsPage.fillingInFieldAndCheck("connection-phone"));
+            assertEquals("Сумма",
+                    mtsPage.fillingInFieldAndCheck("connection-sum"));
+            assertEquals("E-mail для отправки чека",
+                    mtsPage.fillingInFieldAndCheck("connection-email"));
+        } finally {
+            driver.quit();
+        }
 
+    }
+
+    @Test
+        // Лабораторная 16 Задание 1.1 Проверить плесходеры Домашний интернет
+    void PresenceOfTextInt() {
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--incognito");
+        WebDriver driver = new ChromeDriver(options);
+        try {
+            LoginPage mtsPage = new LoginPage(driver);
+            mtsPage.openPage("https://www.mts.by/");
+            mtsPage.clickRejectButton("//button[@class='btn btn_gray cookie__cancel']");
+            mtsPage.selectFromButton("//button[@class='select__header']", "Домашний интернет");
+            assertEquals("Номер абонента",
+                    mtsPage.fillingInFieldAndCheck("internet-phone"));
+            assertEquals("Сумма",
+                    mtsPage.fillingInFieldAndCheck("internet-sum"));
+            assertEquals("E-mail для отправки чека",
+                    mtsPage.fillingInFieldAndCheck("internet-email"));
+        } finally {
+            driver.quit();
+        }
+
+    }
+
+    @Test
+        // Лабораторная 16 Задание 1.1 Проверить плесходеры Рассрочка
+    void PresenceOfTextInstalment() {
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--incognito");
+        WebDriver driver = new ChromeDriver(options);
+        try {
+            LoginPage mtsPage = new LoginPage(driver);
+            mtsPage.openPage("https://www.mts.by/");
+            mtsPage.clickRejectButton("//button[@class='btn btn_gray cookie__cancel']");
+            mtsPage.selectFromButton("//button[@class='select__header']", "Рассрочка");
+            assertEquals("Номер счета на 44",
+                    mtsPage.fillingInFieldAndCheck("score-instalment"));
+            assertEquals("Сумма",
+                    mtsPage.fillingInFieldAndCheck("instalment-sum"));
+            assertEquals("E-mail для отправки чека",
+                    mtsPage.fillingInFieldAndCheck("instalment-email"));
+        } finally {
+            driver.quit();
+        }
+
+    }
+
+    @Test
+        // Лабораторная 16 Задание 1.1 Проверить плесходеры Задолженность
+    void PresenceOfTextArrears() {
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--incognito");
+        WebDriver driver = new ChromeDriver(options);
+        try {
+            LoginPage mtsPage = new LoginPage(driver);
+            mtsPage.openPage("https://www.mts.by/");
+            mtsPage.clickRejectButton("//button[@class='btn btn_gray cookie__cancel']");
+            mtsPage.selectFromButton("//button[@class='select__header']", "Задолженность");
+            assertEquals("Номер счета на 2073",
+                    mtsPage.fillingInFieldAndCheck("score-arrears"));
+            assertEquals("Сумма",
+                    mtsPage.fillingInFieldAndCheck("arrears-sum"));
+            assertEquals("E-mail для отправки чека",
+                    mtsPage.fillingInFieldAndCheck("arrears-email"));
+        } finally {
+            driver.quit();
+        }
+
+    }
+
+
+    @Test
+    void PresenceOfFrame() { //Лабораторная 16 Задание 1.2 Проверить плесходеры в отдельном окне
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--incognito");
+        WebDriver driver = new ChromeDriver(options);
+        try {
+            LoginPage mtsPage = new LoginPage(driver);
+            mtsPage.openPage("https://www.mts.by/");
+            mtsPage.clickRejectButton("//button[@class='btn btn_gray cookie__cancel']");
+
+            mtsPage.fillingInFieldAndWrite("connection-phone", "297777777");
+            mtsPage.fillingInFieldAndWrite("connection-sum", "5");
+            mtsPage.fillingInFieldAndWrite("connection-email", "47jtvfs@gmiil.com");
+            mtsPage.clickRejectButton("//button[@class='button button__default ']");
+            mtsPage.fillingInFieldFrame(); //Переключение на фрейм
+
+            assertEquals("Оплата: Услуги связи Номер:375297777777",
+                    driver.findElement(
+                            By.xpath("//div[@class='pay-description__text']//span[text()]")).getText());
+
+            assertEquals("5.00 BYN",driver.findElement(By.xpath("//span[text()]")).getText());
+
+            driver.findElement(
+                    By.xpath("//img[@src='assets/images/payment-icons/card-types/visa-system.svg']")).isDisplayed();
+            driver.findElement(
+                    By.xpath("//img[@src='assets/images/payment-icons/card-types/mastercard-system.svg']")).isDisplayed();
+            driver.findElement(
+                    By.xpath("//img[@src='assets/images/payment-icons/card-types/belkart-system.svg']")).isDisplayed();
+            driver.findElement(
+                    By.xpath("//div[@class=\"cards-brands cards-brands_random ng-tns-c61-0 ng-star-inserted\"]")).isDisplayed();
+            driver.findElement(
+                    By.xpath("//div[@class=\"cards-brands cards-brands_random ng-tns-c61-0 ng-star-inserted\"]")).isDisplayed();
+
+            assertEquals("Срок действия", driver.findElement(
+                            By.xpath("//label[@class='ng-tns-c46-4 ng-star-inserted']")).getText());
+            assertEquals( "CVC", driver.findElement(
+                    By.xpath("//label[@class='ng-tns-c46-5 ng-star-inserted']")).getText());
+            assertEquals("Имя держателя (как на карте)", driver.findElement(
+                    By.xpath("//label[@class='ng-tns-c46-3 ng-star-inserted']")).getText());
+            assertEquals("Оплатить 5.00 BYN",
+                    driver.findElement(
+                            By.xpath("//button[text()]")).getText());
         } finally {
             driver.quit();
         }

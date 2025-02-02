@@ -13,7 +13,7 @@ public class MtsTest {
 
     @BeforeAll
     static void preparationOfTest() {
-        System.setProperty("chromedriver-win64.zip", "C:/Users/Nikomi/IdeaProjects/Lesson_15/src/main/resources/");
+        System.setProperty("chromedriver-win64.zip", "src/main/resources/chromedriver.exe");
     }
 
     @Test
